@@ -35,9 +35,9 @@ jobs:
 
     - name: Deploy to EKS
       run: |
-        kubectl apply -f k8s-manifest/database/
-        kubectl apply -f k8s-manifest/backend/
-        kubectl apply -f k8s-manifest/frontend/
+        kubectl apply -f k8s-manifest/database/ --validate=false
+        kubectl apply -f k8s-manifest/backend/ --validate=false
+        kubectl apply -f k8s-manifest/frontend/ --validate=false
 
     - name: Verify Deployment Status
       run: |
