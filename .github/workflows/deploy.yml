@@ -33,23 +33,21 @@ jobs:
           --name ${{ env.EKS_CLUSTER }} \
           --region ${{ env.AWS_REGION }}
 
-    - name: Verify Kubernetes Connection
-      run: |
-        kubectl cluster-info
-        kubectl get nodes
-
     - name: Deploy to EKS
       run: |
         kubectl apply -f k8s-manifest/
 
     - name: Verify Deployment Status
       run: |
-        echo "Waiting for deployments to be ready..."
-        kubectl rollout status deployment/frontend -n default --timeout=5m || true
-        kubectl rollout status deployment/backend -n default --timeout=5m || true
-        kubectl rollout status deployment/mysql -n default --timeout=5m || true
+        kubectl rollout status deployment/frontend --timeout=5m
+        kubectl rollout status deployment/backend --timeout=5m
+        kubectl rollout status deployment/mysql --timeout=5m
         
-        echo "Deployment Status:"
+        echo "=== Deployment Status ==="
         kubectl get deployments
+        echo ""
+        echo "=== Pod Status ==="
         kubectl get pods
+        echo ""
+        echo "=== Service Status ==="
         kubectl get services
