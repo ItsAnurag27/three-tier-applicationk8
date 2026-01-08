@@ -1,0 +1,54 @@
+version: '3'
+services:
+  frontend: 
+    container_name: frontend
+    build: 
+      context: frontend/
+    image: itsanurag27/frontend:latest
+    ports: 
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - three-tier-net 
+  backend:
+    container_name: backend
+    build: 
+      context: backend/
+    image: itsanurag27/backend:latest
+    ports: 
+      - "3500:3500"
+    environment:
+      - host=db
+      - user=root
+      - password=mysql123
+      - database=school
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - three-tier-net
+  db:
+    container_name: mysql-container
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql123
+      - MYSQL_DATABASE=school
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - three-tier-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  mysql-data:
+networks:
+  three-tier-net:
+    name: three-tier-net
+    driver: bridge
