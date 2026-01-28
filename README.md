@@ -59,7 +59,7 @@ CREATE TABLE teacher (id INT AUTO_INCREMENT PRIMARY KEY, name varchar(40), subje
 
 
 npm install express mysql cors nodemon
-
+#image
 ### MYSQL Configuration
 ``` bash
 CREATE DATABASE school;
